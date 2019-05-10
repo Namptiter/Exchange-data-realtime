@@ -14,7 +14,7 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-xs-12">
+            <div class="col-xs-9">
                 <div class="panel panel-primary">
                     <div class="panel-heading" style="font-size:24px; text-shadow: 1px 1px 1px #000;">Django Realtime Chat Using Socket.IO and NodeJS</div>
                     <div id="messages-list" class="panel-body" style="height:520px;overflow-y:scroll;width:100%;">
@@ -35,13 +35,17 @@
     <div class="navbar navbar-fixed-bottom">
         <div class="col-xs-2">
             <div class="form-group has-feedback">
-                <label class="control-label">Name</label>
-                <input id="name" type="text" class="form-control" placeholder="Username" maxlength="20" required />
+                <label class="control-label">User:</label>
+
+                {% if user.is_authenticated %}
+            <input id="userkl" class="form-control" maxlength="20" value="{{ user }}" readonly>
+                {% endif %}
+                <!-- <input id="name" type="text" class="form-control" placeholder="Username" maxlength="20" required /> -->
                 <i class="glyphicon glyphicon-user form-control-feedback"></i>
             </div>
         </div>
-        <div class="col-xs-10">
-            <form>
+        <div class="col-xs-8">
+            <form id = "messagesub">
                 <div class="form-group has-feedback">
                     <label class="control-label">Message</label>
                     <input id="message" type="text" class="form-control" placeholder="Enter your message here" required maxlength="140" />
@@ -49,6 +53,17 @@
                 </div>
             </form>
         </div>
+        <form action =  "http://localhost:4001/upload"  method = "POST" id = "savefile" enctype="multipart/form-data">
+            <div class="col-xs-2">
+                 <label class="control-label">Image</label>
+                 <input type="file" name = "file_img" id = "img" >
+     
+        
+        </div>
+            <div class="col-xs-1">
+                <input type="submit" name="Gui" value="Upload">
+            </div>
+        </form>
     </div>
 
 <script>
@@ -65,10 +80,11 @@
     });
 
     // on the form submit
-    $('form').submit(function() {
+    $('#messagesub').submit(function() {
         // gets the elements by ids
         var msg = $('#message');
-        var name = $('#name');
+        var name = $('#userkl');
+        console.log('200'+msg.val().trim()+name.val().trim());
 
         // if the message and the name aren't empty or aren't spaces,
         if(msg.val().trim() !== "" && name.val().trim() !== "") {
@@ -88,6 +104,10 @@
         return false;
     });
 
+    $('#savefile').submit(function() {
+        var file = $('#img');
+        console.log(file);
+    })
     // receives the message object from the server
     socket.on('getMessage', function(msgObject) {
         // gets the fields of the message

@@ -2,6 +2,25 @@ var http = require('http').createServer().listen(4000);
 var io = require('socket.io')(http);
 var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 
+var express = require('express')
+
+var app = express()
+app.listen(4001)
+var multer=require("multer");
+var storage = multer.diskStorage({
+    destination: function(req, file, cb){
+        cb(null,'./upload')
+    },
+    filename: function(req, file, cb){
+        cb(null,file.originalname)
+    }
+});
+var upload=multer({storage:storage});
+
+app.post("/upload",upload.single("file_img"),function(req,res){
+    console.log("Abc");
+    res.redirect('http://localhost:8000');
+});
 // creating an instance of XMLHttpRequest
 var xhttp = new XMLHttpRequest();
 
@@ -16,7 +35,7 @@ io.on('connection', function(socket) {
     // which is an object with the format: {'user_name': < name >, 'message': < message >},
     // it emits for every connected client that a message has been sent, sending the message to the event
     // 'getMessage' in the client side
-    socket.on('message', function(msgObject) {
+    socket.on('message', function(msgObject) {  
         // emits the msgObject to the client
         io.emit('getMessage', msgObject);
 
