@@ -7,20 +7,37 @@ var express = require('express')
 var app = express()
 app.listen(4001)
 var multer=require("multer");
+
 var storage = multer.diskStorage({
     destination: function(req, file, cb){
         cb(null,'./upload')
     },
     filename: function(req, file, cb){
-        cb(null,file.originalname)
+        //split('.') tách 1 chuỗi thành mảng dựa vào kí tự '.';pop() lấy phần tử của mảng cuối
+        var extension=file.originalname.split('.').pop();
+        cb(null,randomstring(10)+"."+extension)
     }
 });
 var upload=multer({storage:storage});
 
+//function
+function randomstring(length) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+       result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+ }
+
 app.post("/upload",upload.single("file_img"),function(req,res){
     console.log("Abc");
-    res.redirect('http://localhost:8000');
+    res.redirect('http://localhost:4001/');
 });
+app.get("/",function(req, res) {
+    res.redirect('/')
+})
 // creating an instance of XMLHttpRequest
 var xhttp = new XMLHttpRequest();
 

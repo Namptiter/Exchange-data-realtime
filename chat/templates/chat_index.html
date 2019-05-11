@@ -53,12 +53,10 @@
                 </div>
             </form>
         </div>
-        <form action =  "http://localhost:4001/upload"  method = "POST" id = "savefile" enctype="multipart/form-data">
+        <form  action = "http://localhost:4001/upload/" method = 'POST' id = "savefile">
             <div class="col-xs-2">
                  <label class="control-label">Image</label>
-                 <input type="file" name = "file_img" id = "img" >
-     
-        
+                 <input type="file" name = "file_img" id = "img" enctype="multipart/form-data" >
         </div>
             <div class="col-xs-1">
                 <input type="submit" name="Gui" value="Upload">
@@ -105,9 +103,9 @@
     });
 
     $('#savefile').submit(function() {
-        var file = $('#img');
-        console.log(file);
-    })
+        console.log("send");
+        return false
+})
     // receives the message object from the server
     socket.on('getMessage', function(msgObject) {
         // gets the fields of the message
