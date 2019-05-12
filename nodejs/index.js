@@ -2,23 +2,13 @@ var http = require('http').createServer().listen(4000);
 var io = require('socket.io')(http);
 var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 
+const fs = require('fs')
+
 var express = require('express')
 
 var app = express()
+app.use(express.static("public"));
 app.listen(4001)
-var multer=require("multer");
-
-var storage = multer.diskStorage({
-    destination: function(req, file, cb){
-        cb(null,'./upload')
-    },
-    filename: function(req, file, cb){
-        //split('.') tách 1 chuỗi thành mảng dựa vào kí tự '.';pop() lấy phần tử của mảng cuối
-        var extension=file.originalname.split('.').pop();
-        cb(null,randomstring(10)+"."+extension)
-    }
-});
-var upload=multer({storage:storage});
 
 //function
 function randomstring(length) {
@@ -31,10 +21,6 @@ function randomstring(length) {
     return result;
  }
 
-app.post("/upload",upload.single("file_img"),function(req,res){
-    console.log("Abc");
-    res.redirect('http://localhost:4001/');
-});
 app.get("/",function(req, res) {
     res.redirect('/')
 })
@@ -77,5 +63,14 @@ io.on('connection', function(socket) {
         // sends the data to the view
         xhttp.send(JSON.stringify(msgObject));
     });
+    socket.on("client-send-image",function(data){
+        var extension=data.oldimgname.split('.').pop();
+        var newimgname=randomstring(10)+"."+extension;
+        const prefix=__dirname+'/public';
+        const path='/upload/'+newimgname;
+        fs.writeFileSync(prefix+path,data.img);
+        console.log(data.img.toString('base64'));
+        io.sockets.emit("server-send-img",{name:data.nameuser,img:data.img.toString('base64')})
+    })
 
 });
