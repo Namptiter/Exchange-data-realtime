@@ -1,7 +1,8 @@
 import json
+import datetime
 
 from django.shortcuts import render
-from .models import Message,Img,File
+from .models import Message
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
@@ -10,7 +11,8 @@ from django.contrib.auth.decorators import login_required
 @login_required(login_url='/login/')
 def chat_index(request):
     context = {
-        'messages': Message.objects.all()
+        'messages': Message.objects.all(),
+        # 'path': 'upload_img'+Message.objects.all(),
     }
     return render(request, 'chat_index.html', context)
 
@@ -24,7 +26,7 @@ def save_message(request):
 
         # tries to create the message and save it in the db
         try:
-            msg = Message.objects.create(user_name=msg_obj['user_name'], message=msg_obj['message'])
+            msg = Message.objects.create(user_name=msg_obj['user_name'], message=msg_obj['message'],time = datetime.datetime.now())
             msg.save()
 
         except:
@@ -35,15 +37,14 @@ def save_message(request):
         return HttpResponseRedirect('/')
 
 @csrf_exempt
-@login_required(login_url='/login/')
-def save_img(request):
-    if request.method == "POST":
-        data = json.loads(request.body.decode('utf-8'))
-        save = Img.objects.create(user_name=data['user_name'], imglink=data['link'])
-        save.save()
+def uploadfile(request):
+    if request.method == 'POST':
+        data_file = json.loads(request.body.decode('utf-8'))
+        try:
+            file = Message.objects.create(user_name = data_file['username'], message = data_file['namefile'], is_img=True, time = datetime.datetime.now())
+            file.save()
+        except:
+            return HttpResponse('error')
+        return HttpResponse('Success')
     else:
-        HttpResponseRedirect('/')
-
-@login_required
-def save_file(request):
-    return 0
+        return HttpResponseRedirect('/login')

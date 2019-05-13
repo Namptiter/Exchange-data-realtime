@@ -1,6 +1,8 @@
 <!DOCTYPE html>
+    {% load staticfiles %}
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <title>Django Realtime Chat Using Socket.IO and NodeJS</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -11,7 +13,7 @@
 
 <!-- change the IP to yours -->
 <script src="http://localhost:4000/socket.io/socket.io.js"></script>
-
+    {% load staticfiles %}
     <div class="container-fluid">
         <div class="row">
             <div class="col-xs-9">
@@ -19,12 +21,21 @@
                     <div class="panel-heading" style="font-size:24px; text-shadow: 1px 1px 1px #000;">Django Realtime Chat Using Socket.IO and NodeJS</div>
                     <div id="messages-list" class="panel-body" style="height:520px;overflow-y:scroll;width:100%;">
                         {% for message in messages %}
+                        {% if message.is_img %}
+                        <div class="input-group">
+                                <span class="input-group-addon" style="text-shadow: 1px 1px 1px #000; background-color: rgb(66, 133, 244); color: #fff" >
+                                    {{ message.user_name }}
+                                </span>
+                            </div>
+                        <img width="300px" src="{% static "upload_img/" %}{{message.message}}" />
+                        {% else %}
                             <div class="input-group">
                                 <span class="input-group-addon" style="text-shadow: 1px 1px 1px #000; background-color: rgb(66, 133, 244); color: #fff" >
                                     {{ message.user_name }}
                                 </span>
                                 <input type="text" class="form-control" value="{{ message.message }}" readonly style="background-color: #fff" />
                             </div>
+                        {% endif %}
                         {% endfor %}
                     </div>
                 </div>
@@ -58,7 +69,7 @@
                 <label for="upload-image" title="Upload image" style="font-size: 25px;">
                     <i class="glyphicon glyphicon-camera"></i>
                 </label>
-                <form onsubmit="return uploadimg()" id="uploadimg">
+                <form onsubmit="return uploadimg()" id="uploadimg" enctype="multipart/form-data">
                     <input type="file" name="upload-image" id="upload-image" style="cursor: pointer; display: none;">
                     <input type="submit" id="btn-upload-img" value="Upload" style="display: none;">
                 </form>
@@ -127,7 +138,7 @@
     socket.on("server-send-img",function(data){
         var icon = $('<span class="input-group-addon" style="text-shadow: 1px 1px 1px #000; background-color: rgb(66, 133, 244); color: #fff" ></span>').append(data.name);
         console.log(data.img);
-        var img = $('<img width="200px" src="data:image/jpeg;base64,'+data.img+'"></img>')
+        var img = $('<img width="300px" src="data:image/jpeg;base64,'+data.img+'"></img>')
          // ng-src="data:image/jpeg;base64,{{data.UserPhoto}}"
         var input_group = $('<div class="input-group"></div>').append(icon, img);
         $('#messages-list').append(input_group);

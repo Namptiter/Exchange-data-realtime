@@ -4,5 +4,5 @@ from django.contrib import admin
 from .models import Message
 
 class MessageAdmin(admin.ModelAdmin):
-	list_display = ('user_name','message')
+	list_display = ('user_name','message','time','is_img')
 admin.site.register(Message, MessageAdmin)

@@ -65,12 +65,32 @@ io.on('connection', function(socket) {
     });
     socket.on("client-send-image",function(data){
         var extension=data.oldimgname.split('.').pop();
-        var newimgname=randomstring(10)+"."+extension;
-        const prefix=__dirname+'/public';
-        const path='/upload/'+newimgname;
-        fs.writeFileSync(prefix+path,data.img);
-        console.log(data.img.toString('base64'));
+        var newimgname=randomstring(10)+"." + extension;
+//        const prefix=__dirname+'/public';
+//        const path='/home/nam/Desktop/Django-nodejs/chat/static/upload_img/'+newimgname;
+        const path = __dirname+'/../chat/static/upload_img/'+newimgname;
+        fs.writeFileSync(path,data.img);
+//        console.log(data.img.toString('base64'));
         io.sockets.emit("server-send-img",{name:data.nameuser,img:data.img.toString('base64')})
+
+        var url = 'http://localhost:8000/upload_file/';
+        xhttp.onreadystatechange = function() {
+            // it checks if the request was succeeded
+            if(this.readyState === 4 && this.status === 200) {
+                // if the value returned from the view is error
+                if(xhttp.responseText === "error")
+                    console.log("error saving message");
+                // if the value returned from the view is success
+                else if(xhttp.responseText === "success")
+                    console.log("the message was posted successfully");
+            }
+        };
+        fileobjects = {
+        'username' : data.nameuser,
+        'namefile' : newimgname,
+        };
+        xhttp.open('POST', url, true);
+        xhttp.send(JSON.stringify(fileobjects));
     })
 
 });
