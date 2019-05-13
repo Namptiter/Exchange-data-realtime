@@ -14,3 +14,6 @@ Run nodejs server in port 4000
 $npm install
 
 $node index.js
+
+# You and your friends need to make new account and login to chat! Good night.
+# Ha Noi, May-13-2019, 23:38p.m
