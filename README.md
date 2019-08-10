@@ -1,5 +1,6 @@
-# Exchange-data-rl
-Create database and Run webserver django in port 8000.
+# Exchange-data-rt
+Create database and Run django web server in port 8000.
+$pip install requirement.txt
 
 $python manage.py makemigrations
 
@@ -15,5 +16,5 @@ $npm install
 
 $node index.js
 
-# You and your friends need to make new account and login to chat! Good night.
 # Ha Noi, May-13-2019, 23:38p.m
+Contact us: nam.vh@lophocvui.edu.vn
