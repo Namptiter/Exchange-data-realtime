@@ -1,6 +1,6 @@
 # Exchange-data-rt
 Create database and Run django web server in port 8000.
-
+```bash
 $pip install requirement.txt
 
 $python manage.py makemigrations
@@ -16,6 +16,7 @@ Run nodejs server in port 4000
 $npm install
 
 $node index.js
-
-# Ha Noi, May-13-2019, 23:38p.m
+```
+---
+### Ha Noi, May-13-2019.
 Contact us: nam.vh@lophocvui.edu.vn
