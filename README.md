@@ -8,11 +8,12 @@ $python manage.py makemigrations
 $python manage.py migrate
 
 $python manage.py runserver 8000
+```
 
-Run nodejs server in port 4000
-
+Run nodejs server in port 400
 /nodejs/
 
+```bash
 $npm install
 
 $node index.js
