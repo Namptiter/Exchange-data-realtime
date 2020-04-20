@@ -1,7 +1,7 @@
 # Exchange-data-rt
 Create database and Run django web server in port 8000.
 ```bash
-$pip install requirement.txt
+$pip install -r requirement.txt
 
 $python manage.py makemigrations
 
